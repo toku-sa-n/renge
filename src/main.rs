@@ -37,7 +37,7 @@ fn expect<'a>(op: char, mut token: LinkedList<Token<'a>>) -> LinkedList<Token<'a
     if token.front().unwrap().kind != TokenKind::TkReserved
         || token.front().unwrap().token_str.as_bytes()[0] as char != op
     {
-        eprintln!("{} is expected.", op);
+        eprintln!("{} is not {}", token.front().unwrap().token_str, op);
         process::exit(1);
     }
     token.pop_front();
@@ -46,7 +46,7 @@ fn expect<'a>(op: char, mut token: LinkedList<Token<'a>>) -> LinkedList<Token<'a
 
 fn expect_number<'a>(mut token: LinkedList<Token<'a>>) -> (i32, LinkedList<Token<'a>>) {
     if token.front().unwrap().kind != TokenKind::TkNum {
-        eprintln!("Number is expected.");
+        eprintln!("{} is not number.", token.front().unwrap().token_str);
         process::exit(1);
     }
     let val: i32 = token.front().unwrap().val;
@@ -83,8 +83,8 @@ fn tokenize<'a>(mut s: &'a str) -> LinkedList<Token<'a>> {
                 token = new_token(TokenKind::TkNum, token, val, s);
                 s = substr;
             }
-            _ => {
-                eprintln!("Can't tokenize.");
+            c => {
+                eprintln!("Can't tokenize '{}'.", c);
                 process::exit(1);
             }
         }
